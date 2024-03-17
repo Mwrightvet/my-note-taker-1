@@ -9,6 +9,7 @@ Welcome to the Note Taker project! This application allows users to write and sa
 - [Technology Used](#technology-used)
 - [Additional Technical Details](#additional-technical-details)
 - [Deployed URL](#deployed-url)
+- [Demo](#demo)
 - [Credits](#credits)
 
 ## User Story
@@ -41,7 +42,10 @@ As a small business owner, I want to be able to write and save notes so that I c
 - `GET /api/notes` should read the db.json file and return all saved notes as JSON.
 - `POST /api/notes` should receive a new note to save on the request body, add it to the db.json file, and then return the new note to the client. You'll need to find a way to give each note a unique id when it's saved (look into npm packages that could do this for you).
 
-## Deployed URL
+## Deployed URL (Heroku) 
+- https://my-note-taker-1-61a267e32d6c.herokuapp.com/ 
+
+## DEMO 
 
 - [![demo](public/assets/Demo.gif)](public/assets/Demo.gif)
 
