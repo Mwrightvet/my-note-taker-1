@@ -1,57 +1,36 @@
-const express = require("express");
-const router = express.Router();
-const fsUtils = require("../helpers/fsUtils");
-const path = require("path");
+const router = require("express").Router();
+const { v4: uuidv4 } = require("uuid");
+const fs = require("fs");
 
-// GET /api/notes - Get all notes
-router.get("/notes", (req, res) => {
-  fsUtils
-    .readFromFile(path.join(__dirname, "../db/db.json"))
-    .then((data) => {
-      res.json(JSON.parse(data));
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Error reading notes data");
-    });
+// Defines the get request to this routes end point '/api/notes'
+router.get("/api/notes", async (req, res) => {
+  const dbJson = await JSON.parse(fs.readFileSync("db/db.json", "utf8"));
+  res.json(dbJson);
 });
 
-// POST /api/notes - Create a new note
-router.post("/notes", (req, res) => {
-  const newNote = req.body;
-  fsUtils
-    .readAndAppend(newNote, path.join(__dirname, "../db/db.json"))
-    .then(() => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Error creating new note");
-    });
+// Defines the post request to this routes end point '/api/notes'
+router.post("/api/notes", (req, res) => {
+  const dbJson = JSON.parse(fs.readFileSync("db/db.json", "utf8"));
+  const newFeedback = {
+    title: req.body.title,
+    text: req.body.text,
+    id: uuidv4(),
+  };
+  dbJson.push(newFeedback);
+  fs.writeFileSync("db/db.json", JSON.stringify(dbJson));
+  res.json(dbJson);
 });
 
-// DELETE /api/notes/:id - Delete a note by ID
-router.delete("/notes/:id", (req, res) => {
-  const noteId = req.params.id;
-  fsUtils
-    .readFromFile(path.join(__dirname, "../db/db.json"))
-    .then((data) => {
-      const notes = JSON.parse(data);
-      const updatedNotes = notes.filter((note) => note.id !== noteId);
-      fsUtils
-        .writeToFile(path.join(__dirname, "../db/db.json"), updatedNotes)
-        .then(() => {
-          res.sendStatus(200);
-        })
-        .catch((err) => {
-          console.error(err);
-          res.status(500).send("Error deleting note");
-        });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Error deleting note");
-    });
+// Defines the delete request to this routes end point '/api/notes/:id'
+
+router.delete("/api/notes/:id", (req, res) => {
+  let data = fs.readFileSync("db/db.json", "utf8");
+  const dataJSON = JSON.parse(data);
+  const newNotes = dataJSON.filter((note) => {
+    return note.id !== req.params.id;
+  });
+  fs.writeFileSync("db/db.json", JSON.stringify(newNotes));
+  res.json("Note deleted.");
 });
 
 module.exports = router;
