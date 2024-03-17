@@ -43,7 +43,7 @@ As a small business owner, I want to be able to write and save notes so that I c
 
 ## Deployed URL
 
-- ![demo][public/assets/Demo.gif](public/assets/Demo.gif)
+- [![demo](public/assets/Demo.gif)](public/assets/Demo.gif)
 
 ## Credits
 
